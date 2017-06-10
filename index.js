@@ -1,3 +1,3 @@
 "use strict";
 
-exports = require("./source/ajax-manager");
+module.exports = require("./source/ajax-manager");
