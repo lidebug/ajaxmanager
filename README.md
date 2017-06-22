@@ -1,5 +1,5 @@
 # ajaxmanager
-### v1.0.1 ( last update: 10 june 2017 )
+### v1.0.2 ( last update: 22 june 2017 )
 
 Manager to simplify the receiving and responding of post requests.
 

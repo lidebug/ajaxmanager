@@ -87,7 +87,6 @@ class AjaxManager {
   end() {
     var f = this;
 
-    if (f.errors.exists)
     Object.assign(f.export, f.errors.exportErrors());
 
     f.close();

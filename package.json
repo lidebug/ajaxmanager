@@ -1,6 +1,6 @@
 {
   "name": "ajaxmanager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Manager to simplify the receiving and responding of post requests",
   "scripts": {
     "test": "echo \"created by lidebug\""
