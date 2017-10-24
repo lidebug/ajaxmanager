@@ -3,106 +3,89 @@ var js = require("libraryjs");
 class AjaxManager {
 
   constructor() {
-    var f = this;
+    this.isDb = false;
+    this.isRes = false;
+    this.isReq = false;
+    this.isClosed = false;
 
-    f.param = {};
-    f.param.isDb = false;
-    f.param.isRes = false;
-    f.param.isReq = false;
+    this.import = {};
+    this.export = {};
 
-    f.export = {};
-
-    f.errors = new js.Errors();
-    f.endEvents = new js.Events();
+    this.errors = new js.Errors();
+    this.endEvents = new js.Events();
   }
 
   set(param) {
-    var f = this;
-
-    if (js.is(param.db)) f.setdb(param.db);
-    if (js.is(param.res)) f.setres(param.res);
-    if (js.is(param.req)) f.setreq(param.req);
+    if (js.is(param.db)) this.setdb(param.db);
+    if (js.is(param.res)) this.setres(param.res);
+    if (js.is(param.req)) this.setreq(param.req);
   }
 
   setdb(db) {
-    var f = this;
-
-    f.db = db;
-    f.isDb = true;
+    this.db = db;
+    this.isDb = true;
   }
 
   setreq(req) {
-    var f = this;
-
-    f.req = req;
-    if ( js.is(f.req.body) ) f.import = f.req.body;
-    f.isReq = true;
+    this.req = req;
+    if ( js.is(this.req.body) ) this.import = this.req.body;
+    this.isReq = true;
   }
 
   setres(res) {
-    var f = this;
-
-    f.res = res;
-    f.isRes = true;
+    this.res = res;
+    this.isRes = true;
   }
 
   onend(event) {
-    var f = this;
-
-    return f.endEvents.push(event);
+    return this.endEvents.push(event);
   }
 
   error(msg, code) {
-    var f = this;
-
-    f.adderror(msg, code);
-    f.end();
+    this.adderror(msg, code);
+    this.end();
   }
   adderror(msg, code) {
-    var f = this;
-
     console.log("[ERROR]: " + msg);
-    f.errors.addError(msg, code);
+    this.errors.addError(msg, code);
   }
 
   success() {
-    var f = this;
-    f.end();
+    this.end();
   }
 
   send(pkg) {
-    var f = this;
-
-    f.export = pkg;
-    f.close();
+    this.export = pkg;
+    this.close();
   }
 
   reply(pkg) {
-    var f = this;
-
-    f.export.pkg = pkg;
-    f.end();
+    this.export.pkg = pkg;
+    this.end();
   }
 
   end() {
-    var f = this;
+    Object.assign(this.export, this.errors.exportErrors());
 
-    Object.assign(f.export, f.errors.exportErrors());
-
-    f.close();
+    this.close();
   }
 
   close() {
-    var f = this;
+    if (this.isClosed) {
+      console.log("[ERROR]: ajax was closed already");
+      return;
+    }
+    this.isClosed = true;
 
-    if (!f.isRes) {
+    this.endEvents.run();
+    if (this.isDb) this.db.close();
+
+    if (!this.isRes) {
       console.log("[ERROR]: ajax response isn't set");
       return;
     }
 
-    f.endEvents.run();
-    f.res.send(f.export);
-    if (f.isDb) f.db.close();
+    this.res.send(this.export);
   }
 
 }

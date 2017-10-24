@@ -1,5 +1,5 @@
 # ajaxmanager
-### v1.0.3 ( last update: 23 june 2017 )
+### v1.1.0 ( last update: 24 oct 2017 )
 
 Manager to simplify the receiving and responding of post requests.
 
@@ -30,30 +30,28 @@ ajax.set({ db: db });
 ### Errors
 Set error and end session
 ```javascript
-ajax.error("wrong ajax");
+ajax.error("wrong data");
 ```
 
 Add more that one error
 ```javascript
-for(let msg of msgs) {
-  if (msg.failed) {
-    ajax.adderror(msg);
-  }
-}
+ajax.adderror("Error 1");
+ajax.adderror("Error 2");
+ajax.adderror("Error 3");
 ```
 
 ### Completion
 When everything is done
 ```javascript
-ajax.success();
+ajax.success(); // response = { error: false };
 ```
 
 Send file
 ```javascript
-ajax.reply(file);
+ajax.reply(file); // response = { error: false, pkg: file};
 ```
 
 Send file instead everything else
 ```javascript
-ajax.send(file);
+ajax.send(file); // response = file
 ```
